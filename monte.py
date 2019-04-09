@@ -12,9 +12,6 @@ def season(lambdas):
     # won, draw, lost, for, against, points
     table = np.zeros((20, 6), dtype=int)
 
-    # max goals score in the season
-    max_game = [0, 0, 0]
-
     for home_pos in range(20):
         for away_pos in range(20):
             # team doesn't play against itself
@@ -69,4 +66,4 @@ if __name__ == "__main__":
         output[j, :, :] = season(lambdas)
 
         if j % 500 == 0:
-            print("Completed:",j)
+            print("Completed:", j)
