@@ -86,7 +86,7 @@ for y in range(0, 4):
         axe.axvline(x=np.amax(output_sorted[:, team, 5]), color="g", lw="1")
 fig2.savefig("2.png", bbox_inches='tight', dpi=1000)
 '''
-
+'''
 fig1, ax1 = plt.subplots(1, 2, sharex=True)
 team = 20 - 1
 minx = 0
@@ -136,7 +136,7 @@ axe.axvline(me, color="r", lw="1", label="mean = {:.2f}".format(me))
 axe.axvline(mi, color="y", lw="1", label="min = {}".format(mi))
 axe.axvline(ma, color="g", lw="1", label="max = {}".format(ma))
 axe.legend()
-
+'''
 
 # table for positions
 '''rankings = np.memmap("rankings_{}.npy".format(k),
@@ -145,15 +145,60 @@ rankings[:, :] = np.zeros((20, 20), dtype=int)
 for j in range(k):
     ordering = output[j, :, 5].argsort()
     ordering = np.flip(ordering, axis=0)
-    for x in range(20):
-        rankings[ordering, range(20)] += 1
+    rankings[ordering, range(20)] += 1
     if j % 10**4 == 0:
         print(j)
 del rankings
+'''
 
 rankings = np.memmap("rankings_{}.npy".format(k),
                      dtype='int', mode='r', shape=(20, 20))
 
+
+fig3, ax3 = plt.subplots(1, 1, figsize=(12, 12))
+data = []
+labs = []
+for y in range(20):
+    x = rankings[y, 0]
+    if x != 0:
+        data.append(int(x))
+        labs.append(team_pos[y])
+
+
+order = [0, 3, 1, 5, 2, 4, 6]
+colors = ["#ff585c", "#dd0000", "#034694",
+          "#ffe500", "#6c8193", "#97c1e7",  "#cccccc"]
+data = [data[i] for i in order]
+labs = [labs[i] for i in order]
+
+ax3.set_title("Number of 1st place finishes", fontsize=12)
+ax3.pie(data, labels=labs, autopct='%1.4f%%', colors=colors,
+        explode=(0.2, 0.2, 0.2, 0.2, 0.2, 0, 0.2), labeldistance=0.8)
+
+
+fig4, ax4 = plt.subplots(1, 1, figsize=(12, 12))
+data = []
+labs = []
+for y in range(20):
+    x1 = rankings[y, 17]
+    x2 = rankings[y, 18]
+    x3 = rankings[y, 19]
+    tot = x1+x2+x3
+    if tot != 0:
+        data.append(int(tot))
+        labs.append(team_pos[y])
+
+order = [0, 1, 2, 5, 6, 7, 9, 10, 8, 11, 4, 12, 13, 14, 3, 15]
+colors = ["#ff585c", "#ed1c24", "#005daa", "#27409b", "#cccccc",
+          "#ccff33", "#99ccff", "#ed1a3b", "#6c8193", "#761ec8",
+          "#034694", "#a3a3a3", "#fbee23", "#007020", "#fde6b3", "#7c2c3b"]
+data = [data[i] for i in order]
+labs = [labs[i] for i in order]
+
+ax4.set_title("Number of times relegated", fontsize=12)
+ax4.pie(data, labels=labs,  colors=colors, autopct='%1.4f%%')
+
+'''
 fig0, ax0 = plt.subplots(1, 1)
 rowlabel = team_pos
 collabel = list(map(str, range(1, 21)))
